@@ -15,6 +15,26 @@ FROM ghcr.io/ublue-os/bazzite:stable
 # Fedora base image: quay.io/fedora/fedora-bootc:44
 # CentOS base images: quay.io/centos-bootc/centos-bootc:stream10
 
+# 2. Import the Universal Blue akmods framework matching your Bazzite kernel stream
+# (Bazzite uses the custom gaming 'ogc' kernel flavor)
+FROM ghcr.io/ublue-os/akmods:main-ogc AS akmods
+
+# 3. Pull the specific vhba kmod built by the framework
+RUN akmods-install vhba
+
+# 4. Return to your base image and copy the built, signed vhba driver into place
+FROM base
+COPY --from=akmods /rpms /tmp/akmods-rpms
+RUN dnf5 install -y /tmp/akmods-rpms/kmod-vhba-*.rpm
+
+# 5. Bring in your custom files and run your build.sh script
+COPY system_files /
+COPY build_files/build.sh /tmp/build.sh
+RUN /tmp/build.sh
+
+# 6. Ensure the final image is cryptographically signed for Secure Boot
+RUN usr/bin/signing
+
 ### [IM]MUTABLE /opt
 ## Some bootable images, like Fedora, have /opt symlinked to /var/opt, in order to
 ## make it mutable/writable for users. However, some packages write files to this directory,

@@ -14,6 +14,10 @@ cp -avf "/ctx/system_files"/. /
 
 # this installs a package from fedora repos
 dnf5 install -y tmux
+dnf5 copr enable -y rok/cdemu
+
+# 2. Install the CDEmu client, daemon, and GTK GUI
+dnf5 install -y cdemu-client cdemu-daemon kde-cdemu-manager-kf6
 
 # Use a COPR Example:
 #
