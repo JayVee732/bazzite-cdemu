@@ -4,7 +4,7 @@ COPY build_files /
 COPY system_files /system_files
 
 # Base Image
-FROM ghcr.io/ublue-os/bazzite:stable
+FROM ghcr.io/ublue-os/bazzite:stable AS base
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:testing
 # FROM ghcr.io/ublue-os/aurora:stable
@@ -17,7 +17,7 @@ FROM ghcr.io/ublue-os/bazzite:stable
 
 # 2. Import the Universal Blue akmods framework matching your Bazzite kernel stream
 # (Bazzite uses the custom gaming 'ogc' kernel flavor)
-FROM ghcr.io/ublue-os/akmods:main-ogc AS akmods
+FROM ghcr.io/ublue-os/akmods:bazzite AS akmods
 
 # 3. Pull the specific vhba kmod built by the framework
 RUN akmods-install vhba
