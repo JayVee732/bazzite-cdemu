@@ -4,7 +4,7 @@ COPY build_files /
 COPY system_files /system_files
 
 # Base Image
-FROM ghcr.io/ublue-os/bazzite:stable AS base
+FROM ghcr.io/ublue-os/bazzite:stable
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:testing
 # FROM ghcr.io/ublue-os/aurora:stable
@@ -15,24 +15,18 @@ FROM ghcr.io/ublue-os/bazzite:stable AS base
 # Fedora base image: quay.io/fedora/fedora-bootc:44
 # CentOS base images: quay.io/centos-bootc/centos-bootc:stream10
 
-# Use the correct tag tracking Fedora 45's CoreOS stable layer
-FROM ghcr.io/ublue-os/akmods:coreos-stable-45 AS akmods
+# Enable the rok/cdemu COPR and install user-space utilities
+RUN dnf copr enable -y rok/cdemu && \
+    dnf install -y cdemu-daemon cdemu-client gcdemu && \
+    dnf copr disable -y rok/cdemu && \
+    dnf clean all
 
-# 3. Pull the specific vhba kmod built by the framework
-RUN akmods-install vhba
+# Ensure the vhba module loads automatically at boot
+RUN mkdir -p /usr/lib/modules-load.d/ && \
+    echo "vhba" > /usr/lib/modules-load.d/vhba.conf
 
-# 4. Return to your base image and copy the built, signed vhba driver into place
-FROM base
-COPY --from=akmods /rpms /tmp/akmods-rpms
-RUN dnf5 install -y /tmp/akmods-rpms/kmod-vhba-*.rpm
-
-# 5. Bring in your custom files and run your build.sh script
-COPY system_files /
-COPY build_files/build.sh /tmp/build.sh
-RUN /tmp/build.sh
-
-# 6. Ensure the final image is cryptographically signed for Secure Boot
-RUN usr/bin/signing
+# Optional: Add your user to the cdrom group if needed for device nodes
+# (Handled system-wide or via custom udev rules if necessary)
 
 ### [IM]MUTABLE /opt
 ## Some bootable images, like Fedora, have /opt symlinked to /var/opt, in order to
