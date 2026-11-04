@@ -15,6 +15,7 @@ cp -avf "/ctx/system_files"/. /
 # this installs a package from fedora repos
 dnf5 install -y tmux
 dnf5 copr enable -y rok/cdemu
+dnf5 copr enable -y rodoma92/kde-cdemu-manager
 
 # 2. Install the CDEmu client, daemon, and GTK GUI
 dnf5 install -y cdemu-client cdemu-daemon kde-cdemu-manager-kf6
