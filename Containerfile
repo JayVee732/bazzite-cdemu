@@ -15,9 +15,8 @@ FROM ghcr.io/ublue-os/bazzite:stable AS base
 # Fedora base image: quay.io/fedora/fedora-bootc:44
 # CentOS base images: quay.io/centos-bootc/centos-bootc:stream10
 
-# 2. Import the Universal Blue akmods framework matching your Bazzite kernel stream
-# (Bazzite uses the custom gaming 'ogc' kernel flavor)
-FROM ghcr.io/ublue-os/akmods:bazzite AS akmods
+# Use the correct tag tracking Fedora 45's CoreOS stable layer
+FROM ghcr.io/ublue-os/akmods:coreos-stable-45 AS akmods
 
 # 3. Pull the specific vhba kmod built by the framework
 RUN akmods-install vhba
