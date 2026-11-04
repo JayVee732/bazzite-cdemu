@@ -17,7 +17,7 @@ FROM ghcr.io/ublue-os/bazzite:stable
 
 # Enable the rok/cdemu COPR and install user-space utilities
 RUN dnf copr enable -y rok/cdemu && \
-    dnf install -y cdemu-daemon cdemu-client gcdemu && \
+    dnf install -y cdemu-daemon cdemu-client && \
     dnf copr disable -y rok/cdemu && \
     dnf clean all
 
@@ -48,6 +48,8 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/log \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/build.sh
+
+LABEL org.opencontainers.image.title="bazzite-cdemu"
 
 ### LINTING
 ## Verify final image and contents are correct.
