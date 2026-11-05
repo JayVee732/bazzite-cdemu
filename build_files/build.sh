@@ -17,7 +17,7 @@ dnf5 copr enable -y rok/cdemu
 dnf5 copr enable -y rodoma92/kde-cdemu-manager
 
 # 2. Install the CDEmu client, daemon, and GTK GUI
-dnf5 install -y cdemu-client cdemu-daemon kde-cdemu-manager-kf6
+dnf5 install -y cdemu-client cdemu-daemon kde-cdemu-manager
 
 # Use a COPR Example:
 #

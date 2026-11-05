@@ -15,12 +15,6 @@ FROM ghcr.io/ublue-os/bazzite:stable
 # Fedora base image: quay.io/fedora/fedora-bootc:44
 # CentOS base images: quay.io/centos-bootc/centos-bootc:stream10
 
-# Enable the rok/cdemu COPR and install user-space utilities
-RUN dnf copr enable -y rok/cdemu && \
-    dnf install -y cdemu-daemon cdemu-client && \
-    dnf copr disable -y rok/cdemu && \
-    dnf clean all
-
 # Ensure the vhba module loads automatically at boot
 RUN mkdir -p /usr/lib/modules-load.d/ && \
     echo "vhba" > /usr/lib/modules-load.d/vhba.conf
